@@ -1,0 +1,55 @@
+entity AppUser {
+}
+
+relationship OneToOne {
+    AppUser{internalUser} to User
+}
+
+entity Preferences {
+    weeklyGoal Integer required min(10) max(21)
+    weightUnits Units required
+}
+
+relationship OneToOne {
+    Preferences{user} to AppUser
+}
+
+enum Units{
+    KG
+    LB
+}
+
+entity Points {
+    date LocalDate
+    exercise Integer
+    meals Integer
+    alcohol Integer
+    notes String maxlength(140)
+}
+
+entity Weight {
+    date ZonedDateTime
+    weight Double
+}
+
+entity BloodPressure {
+    date ZonedDateTime
+    systolic Integer
+    diastolic Integer
+}
+
+relationship OneToMany {
+    Points{user} to AppUser{points}
+    Weight{user} to AppUser{weights}
+    BloodPressure{user} to AppUser{bloodPressures}
+}
+
+
+// Set pagination options
+paginate Points with pagination
+
+// Use Data Transfer Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except Points
